@@ -1,0 +1,1453 @@
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil5\C51\BIN\C51.EXE ..\源文件\main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listi
+                    -ngs\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "sys_fun.h"
+   2          #include "image.h"
+   3          #include "songs.h"
+   4          #include "display.h"
+   5          #include <stdio.h>
+   6          #include <stdlib.h>
+   7          #define uchar unsigned char
+   8            
+   9          char dot_h=0x2e;
+  10          char dot_l=0x07;
+  11          uchar start=1;
+  12          uchar key,k=0;
+  13          uchar Count;
+  14          uchar game2_number;
+  15          uchar temp[3];
+  16          uchar grade;
+  17          uchar m,n; 
+  18          uchar key_1,key_tune;
+  19          uchar time=0;
+  20          uchar play_judge = 0;
+  21          uchar *game2_num[]={"16472","56223","42356","23552","75367"};
+  22          uchar code game2_check[5][5]={{1,6,4,7,2},{5,6,2,2,3},{4,2,3,5,6},{2,3,5,5,2},{7,5,3,6,7}};
+  23            
+  24          void play_start(uchar (*music)[2]);
+  25          void show_score(uchar (*music)[2]);
+  26          void delay(uchar p);
+  27          
+  28          void main()
+  29          { 
+  30   1        uchar i=0,j=0;
+  31   1        uchar i_cide=0,key_cide;
+  32   1        uchar clong,hight;
+  33   1        hight=32;
+  34   1        clong=16;
+  35   1        Ini_Lcd();//液晶初始化子程序
+  36   1        WRGDRAM(0x80,clong,hight,gImage_1);//求是之光
+  37   1        play_start(music0);   
+  38   1        P4M1=0x00;
+  39   1        P4M0=0x00;
+  40   1        Ini_Lcd();//液晶初始化子程序
+  41   1        WRCGRAM1(0x40);
+  42   1        WRCGRAM2(0x50);
+  43   1        WRCGRAM3(0x60);
+  44   1        WRCGRAM4(0x70);
+  45   1        Disp(1,0,16,"浙江大学光电学院");//显示数据到LCD12864子程序      
+  46   1        Disp(2,1,14,"电子系统设计");//显示数据到LCD12864子程序
+  47   1        Disp(3,1,12,"from：蔡明轩");//显示数据到LCD12864子程序
+  48   1        Disp(4,1,12,"n:3180101484");//显示数据到LCD12864子程序
+  49   1        delay(20);
+  50   1        start=0;  
+  51   1        Ini_Lcd();
+  52   1          Disp(1,3,4,"密码");
+  53   1          for (i=0;i<5;i++)
+  54   1          {
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 2   
+
+  55   2          Write_Cmd(0x9A+i);
+  56   2          Write_Data(0x00);
+  57   2          Write_Data(0x00);
+  58   2          }
+  59   1          Write_Cmd(0x9A+i_cide);
+  60   1          Write_Data(0x00);
+  61   1          Write_Data(0x02);
+  62   1          while (1)
+  63   1          {
+  64   2              bit flag_cide;
+  65   2              flag_cide=0;
+  66   2              key_cide=00;
+  67   2              while (1)
+  68   2              {
+  69   3                  KeyIO=0xf0;
+  70   3                  if((KeyIO&0xf0)!=0xf0)
+  71   3                  {
+  72   4                      Delay_xMs(100);
+  73   4                      if ((KeyIO&0xf0)!=0xf0)
+  74   4                      {
+  75   5                      key_cide=scankey();
+  76   5                      KeyIO=0xf0;
+  77   5                      while (KeyIO!=0xf0);
+  78   5                      break;
+  79   5                      }
+  80   4                  }
+  81   3              }
+  82   2              switch (key_cide)
+  83   2              {
+  84   3                  case 11:
+  85   3                  cide[i_cide]=1+0x30;
+  86   3                  break;
+  87   3                  case 12:
+  88   3                  cide[i_cide]=2+0x30;
+  89   3                  break;
+  90   3                  case 13:
+  91   3                  cide[i_cide]=3+0x30;
+  92   3                  break;
+  93   3                  case 14:
+  94   3                  cide[i_cide]=4+0x30;
+  95   3                  break;
+  96   3                  case 21:
+  97   3                  cide[i_cide]=5+0x30;
+  98   3                  break;
+  99   3                  case 22:
+ 100   3                  cide[i_cide]=6+0x30;
+ 101   3                  break;
+ 102   3                  case 23:
+ 103   3                  cide[i_cide]=7+0x30;
+ 104   3                  break;
+ 105   3                  case 24:
+ 106   3                  cide[i_cide]=8+0x30;
+ 107   3                  break;
+ 108   3                  case 31:
+ 109   3                  cide[i_cide]=9+0x30;
+ 110   3                  break;
+ 111   3                  default:
+ 112   3                  if (i_cide)
+ 113   3                  {
+ 114   4                  if (i_cide<4||cide[4]==0x30)
+ 115   4                  {
+ 116   5                  i_cide--;
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 3   
+
+ 117   5                  cide[i_cide]=0+0x30;
+ 118   5                  }
+ 119   4                  else
+ 120   4                  cide[i_cide]=0+0x30;
+ 121   4                  }
+ 122   3                  break;
+ 123   3              }
+ 124   2              if (i_cide<4&&key_cide<32)
+ 125   2              i_cide++;  
+ 126   2              for (i=0;i<5;i++)
+ 127   2              {
+ 128   3                  if (cide[i]-0x30)
+ 129   3                  Disp(3,i+2,1,cide+i);
+ 130   3                  else
+ 131   3                  Disp(3,i+2,2," ");
+ 132   3              }
+ 133   2              for (i=0;i<5;i++)
+ 134   2              {
+ 135   3              Write_Cmd(0x9A+i);
+ 136   3              Write_Data(0x00);
+ 137   3              Write_Data(0x00);
+ 138   3              }
+ 139   2              Write_Cmd(0x9A+i_cide);
+ 140   2              Write_Data(0x00);
+ 141   2              Write_Data(0x02);
+ 142   2              if (i_cide==4&&key_cide<32)
+ 143   2              {
+ 144   3                  flag_cide=1;
+ 145   3                  for (i=0;i<5;i++)
+ 146   3                  if (cide[i]!=cide_check[i])
+ 147   3                  {
+ 148   4                  flag_cide=0;
+ 149   4                  break;
+ 150   4                  }
+ 151   3              }
+ 152   2              if (flag_cide)
+ 153   2              break;
+ 154   2          }
+ 155   1      
+ 156   1        
+ 157   1        while(1)
+ 158   1        {
+ 159   2          key_1=00;
+ 160   2          KeyIO=0xf0;
+ 161   2          P4M1=0x00;
+ 162   2          P4M0=0x00;
+ 163   2          Ini_Lcd();//液晶初始化子程序      
+ 164   2          Disp(1,0,8,"菜单界面");//显示数据到LCD12864子程序
+ 165   2          Disp(2,0,10,"1.歌曲选择");//显示数据到LCD12864子程序
+ 166   2          Disp(3,0,10,"2.基本弹奏");//显示数据到LCD12864子程序
+ 167   2          Disp(4,0,10,"3.游戏模块");//显示数据到LCD12864子程序
+ 168   2          while (1)
+ 169   2            {
+ 170   3              if ((KeyIO&0xf0)!=0xf0)
+ 171   3              Delay_xMs(100);
+ 172   3              if((KeyIO&0xf0)!=0xf0){
+ 173   4              key_1=scankey();
+ 174   4                      if (key_1>=11&&key_1<=13)
+ 175   4              break; }
+ 176   3            }
+ 177   2      
+ 178   2          switch (key_1)
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 4   
+
+ 179   2          {
+ 180   3      
+ 181   3            case 11:
+ 182   3            {
+ 183   4              unsigned char page=1;
+ 184   4              while (1)
+ 185   4              {
+ 186   5                switch (page)
+ 187   5                {
+ 188   6                  case 1:
+ 189   6                    {
+ 190   7                    key=00;
+ 191   7                    KeyIO=0xf0;
+ 192   7                    Ini_Lcd();//液晶初始化子程序
+ 193   7                      Disp(1,0,8,"歌曲目录");//显示数据到LCD12864子程序     
+ 194   7                    Disp(2,0,10,"1.千与千寻");//显示数据到LCD12864子程序
+ 195   7                    Disp(3,0,8,"2.红河谷");//显示数据到LCD12864子程序
+ 196   7                    Disp(4,0,8,"4.下一页");//显示数据到LCD12864子程序
+ 197   7                    while (1)
+ 198   7                    {
+ 199   8                      if ((KeyIO&0xf0)!=0xf0)
+ 200   8                    {
+ 201   9                      Delay_xMs(100);
+ 202   9                      if ((KeyIO&0xf0)!=0xf0)
+ 203   9                      {
+ 204  10                      key=scankey();
+ 205  10                                      if (key==11||key==12||key==14||key==43)
+ 206  10                      break;  
+ 207  10                      }
+ 208   9                    } 
+ 209   8                    }
+ 210   7                    switch (key)
+ 211   7                    {
+ 212   8                    case 11:
+ 213   8                      Ini_Lcd();
+ 214   8                      Disp(1,0,8,"千与千寻");
+ 215   8                      Disp(4,0,8,"16：退出");
+ 216   8                      play_start(music1); 
+ 217   8                      break;//显示数据到LCD12864子程序
+ 218   8                    case 12:
+ 219   8                      Ini_Lcd();
+ 220   8                      Disp(1,0,6,"红河谷");
+ 221   8                      Disp(4,0,8,"16：退出");
+ 222   8                      play_start(music2); 
+ 223   8                      break;//显示数据到LCD12864子程
+ 224   8                    case 14:
+ 225   8                      page=2;
+ 226   8                      break;
+ 227   8                    default: break;
+ 228   8                    }
+ 229   7                    break;
+ 230   7                    }
+ 231   6                  case 2:
+ 232   6                    {
+ 233   7                    key=00;
+ 234   7                    KeyIO=0xf0;
+ 235   7                    Ini_Lcd();//液晶初始化子程序
+ 236   7                    Disp(1,0,14,"请选择播放歌曲");//显示数据到LCD12864子程序      
+ 237   7                    Disp(2,0,10,"1.天空之城");//显示数据到LCD12864子程序
+ 238   7                    Disp(3,0,6,"2.录音");//显示数据到LCD12864子程序
+ 239   7                    Disp(4,0,8,"3.上一页");//显示数据到LCD12864子程序
+ 240   7                    while (1)
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 5   
+
+ 241   7                    {
+ 242   8                      if ((KeyIO&0xf0)!=0xf0)
+ 243   8                      {
+ 244   9                        Delay_xMs(100);
+ 245   9                        if ((KeyIO&0xf0)!=0xf0)
+ 246   9                        {
+ 247  10                          key=scankey();
+ 248  10                                              if (key==11||key==12||key==13||key==43) 
+ 249  10                          break;
+ 250  10                        }
+ 251   9                      }
+ 252   8                    }
+ 253   7                    switch (key)
+ 254   7                    {
+ 255   8                    case 11:
+ 256   8                      Ini_Lcd();
+ 257   8                      Disp(1,0,8,"天空之城");
+ 258   8                      Disp(4,0,8,"16：退出");
+ 259   8                      play_start(music3); 
+ 260   8                      break;//显示数据到LCD12864子程序
+ 261   8                    case 12:
+ 262   8                                      if (music6[1][0]==0)
+ 263   8                                      {
+ 264   9                                      Ini_Lcd();
+ 265   9                                      Disp(4,0,8,"16：退出");
+ 266   9                                      Disp(4,5,6,"无音频");
+ 267   9                                      KeyIO=0xf0;
+ 268   9                                      while (1)
+ 269   9                                      {
+ 270  10                                          if ((P1&0xf0)!=0xf0)
+ 271  10                                {
+ 272  11                                  Delay_xMs(50);
+ 273  11                                  if ((P1&0xf0)!=0xf0)
+ 274  11                                  {
+ 275  12                                              if (scankey()==44)
+ 276  12                                              break;
+ 277  12                                              }
+ 278  11                                }
+ 279  10                                      }
+ 280   9                                      break;
+ 281   9                        }
+ 282   8                      Ini_Lcd();
+ 283   8                      Disp(4,5,6,"播放中");
+ 284   8                          Disp(4,0,8,"16：退出");
+ 285   8                      play_start(music6); 
+ 286   8                      break;//显示数据到LCD12864子程
+ 287   8                    case 13:
+ 288   8                      page=1;
+ 289   8                      break;
+ 290   8                    default: break;
+ 291   8                    } 
+ 292   7                    break;
+ 293   7                    }
+ 294   6                    default: break;
+ 295   6                }
+ 296   5                if (key==43)
+ 297   5                break;
+ 298   5              }
+ 299   4              break;
+ 300   4            }
+ 301   3            case 12:
+ 302   3            {   
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 6   
+
+ 303   4              
+ 304   4                      bit flag=0;
+ 305   4                      Ini_Lcd();
+ 306   4              play_judge = 1;
+ 307   4              //Disp(1,0,12,"进行弹奏模式");//显示数据到LCD12864子程序
+ 308   4              //Disp(4,0,12,"1.录2.停3.放");//显示数据到LCD12864子程序
+ 309   4              Disp(3,0,12,"1.录音2.暂停");//显示数据到LCD12864子程序
+ 310   4              Disp(4,0,10,"3.回放对比");
+ 311   4                while (1)
+ 312   4                {
+ 313   5                  char tune=0;
+ 314   5                key=00;
+ 315   5                KeyIO=0xf0;
+ 316   5                if ((P1&0xf0)!=0xf0)
+ 317   5                  {
+ 318   6                    Delay_xMs(100);
+ 319   6                  if ((P1&0xf0)!=0xf0)
+ 320   6                  key=scankey();  
+ 321   6                } 
+ 322   5                          switch(key)
+ 323   5                  {
+ 324   6                    case 11:
+ 325   6                    Disp(2,0,8,"录音开启");
+ 326   6                    k=1;i=0;
+ 327   6                    break;//显示数据到LCD12864子程序  
+ 328   6                    case 12:
+ 329   6                      Disp(2,0,8,"录音关闭");
+ 330   6                    k=0;
+ 331   6                                  flag=0;
+ 332   6                                  music6[i][0]=0xff;
+ 333   6                    music6[i][1]=0xff;
+ 334   6                                  i=0;
+ 335   6                    break;//显示数据到LCD12864子程序
+ 336   6                  case 13:
+ 337   6                                  if (music6[1][0]==0)
+ 338   6                                  {
+ 339   7                                  Disp(3,0,6,"无音频");
+ 340   7                                  break;
+ 341   7                    }
+ 342   6                                  //show_score(music0);
+ 343   6                                  Ini_Lcd();
+ 344   6                                  Disp(1,6,4,"回放");
+ 345   6                                  Disp(3,6,4,"原音");
+ 346   6                    play_start(music6+1);
+ 347   6                                  Ini_Lcd();
+ 348   6                                  //Disp(1,0,12,"进行弹奏模式");//显示数据到LCD12864子程序
+ 349   6                          Disp(3,0,12,"1.录音2.暂停");//显示数据到LCD12864子程序
+ 350   6                          Disp(4,0,10,"3.回放对比");
+ 351   6                    break;//显示数据到LCD12864子程序
+ 352   6                }
+ 353   5                key_tune=00;
+ 354   5                KeyIO=0xf0;
+ 355   5                if ((P1&0xf0)!=0xf0)
+ 356   5                {
+ 357   6                  Delay_xMs(50);
+ 358   6                  if ((P1&0xf0)!=0xf0)
+ 359   6                  key_tune=scankey();
+ 360   6                }
+ 361   5                if (OPT_CHECK!=0x00)
+ 362   5                    {
+ 363   6                    switch(key_tune)
+ 364   6                    {
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 7   
+
+ 365   7                    case 41:
+ 366   7                    Disp(1,6,4,"高音");
+ 367   7                    tune=1;
+ 368   7                    break;
+ 369   7                    case 42:
+ 370   7                    Disp(1,6,4,"低音");
+ 371   7                    tune=-1;
+ 372   7                    break;
+ 373   7                                  default:
+ 374   7                                  Disp(1,6,4,"中音");
+ 375   7                    tune=0;
+ 376   7                    break;
+ 377   7                    } 
+ 378   6                   }
+ 379   5                    if(OPT_CHECK&0x01)
+ 380   5                   {
+ 381   6                      Disp(1,0,8,"音符：1");
+ 382   6                     m=13+12*tune,n=2;
+ 383   6                     
+ 384   6                   }
+ 385   5                   else if(OPT_CHECK&0x02)
+ 386   5                   {
+ 387   6                     Disp(1,0,8,"音符：2");
+ 388   6                     m=15+12*tune,n=2;
+ 389   6                     
+ 390   6                   }
+ 391   5                   else if(OPT_CHECK&0x04)
+ 392   5                   {
+ 393   6                     Disp(1,0,8,"音符：3");
+ 394   6                     m=17+12*tune,n=2;
+ 395   6                     
+ 396   6                   }
+ 397   5                   else if(OPT_CHECK&0x08)
+ 398   5                   {
+ 399   6                     Disp(1,0,8,"音符：4");
+ 400   6                     m=18+12*tune,n=2;
+ 401   6                     
+ 402   6                   }
+ 403   5                   else if(OPT_CHECK&0x10)
+ 404   5                   {
+ 405   6                    Disp(1,0,8,"音符：5");
+ 406   6                     m=20+12*tune,n=2;
+ 407   6                    
+ 408   6                   }
+ 409   5                   else if(OPT_CHECK&0x20)
+ 410   5                   {
+ 411   6                     Disp(1,0,8,"音符：6");
+ 412   6                     m=22+12*tune,n=2;
+ 413   6                     
+ 414   6                   }
+ 415   5                   else if(OPT_CHECK&0x40)
+ 416   5                   {
+ 417   6                     Disp(1,0,8,"音符：7");
+ 418   6                     m=24+12*tune,n=2;
+ 419   6                   }
+ 420   5                   else{
+ 421   6                    m=0,n=2;
+ 422   6                    TR0=0;
+ 423   6                    Disp(1,0,8,"音符：0");
+ 424   6                   }
+ 425   5                               if (k==1&&flag==0)
+ 426   5                               {
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 8   
+
+ 427   6                               if (m!=0)
+ 428   6                               flag=1;
+ 429   6                               for (i=0;i++;i<60)
+ 430   6                               {
+ 431   7                               music6[i][0]=0;
+ 432   7                               music6[i][1]=0;
+ 433   7                               }
+ 434   6                               i=1;
+ 435   6                               }
+ 436   5                   if(k==1&&flag==1){
+ 437   6                               if (music6[i-1][0]==m&&music6[i-1][1]==4)
+ 438   6                               music6[i-1][1]=music6[i-1][1]+4;
+ 439   6                               else
+ 440   6                               {
+ 441   7                               music6[i][0]=m;
+ 442   7                               music6[i][1]=n*2;
+ 443   7                               i++;
+ 444   7                               }
+ 445   6                   }
+ 446   5                   if(i>=61){
+ 447   6                    music6[i][0]=0xFF;
+ 448   6                    music6[i][1]=0xFF;
+ 449   6                    i=0;k=0;flag=0;
+ 450   6                    Disp(2,0,8,"录音关闭");
+ 451   6                   } 
+ 452   5                   if(m==0)
+ 453   5                    {
+ 454   6                    TR0=0;
+ 455   6                    delay(n);}
+ 456   5                   else
+ 457   5                    {
+ 458   6                     TR0=1;
+ 459   6                     delay(n);
+ 460   6                    }
+ 461   5                  if (key==43)
+ 462   5                              {
+ 463   6                                  TR0=0;
+ 464   6                                  break;
+ 465   6                              }
+ 466   5                  
+ 467   5                }
+ 468   4                play_judge = 0;
+ 469   4                break;
+ 470   4            }
+ 471   3             case 13:
+ 472   3          {  
+ 473   4                  char key_game;
+ 474   4                  while (1)
+ 475   4                  {
+ 476   5                      key_game=00;
+ 477   5                      Ini_Lcd();
+ 478   5                      Disp(1,0,10,"1:看谱弹曲");
+ 479   5                      Disp(2,0,10,"2:记忆大师");
+ 480   5                      Disp(4,0,8,"15：退出");
+ 481   5                      while (1)
+ 482   5                      {
+ 483   6                          KeyIO=0xf0;
+ 484   6                          if ((KeyIO&0xf0)!=0xf0)
+ 485   6                          {
+ 486   7                              Delay_xMs(100);
+ 487   7                              if ((KeyIO&0xf0)!=0xf0)
+ 488   7                              {
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 9   
+
+ 489   8                                  key_game=scankey();
+ 490   8                                  if (key_game==11||key_game==12||key_game==43)
+ 491   8                                  break;
+ 492   8                              }
+ 493   7                          }
+ 494   6                      }
+ 495   5                      if (key_game==43)
+ 496   5                          break;
+ 497   5                      switch (key_game)
+ 498   5                      {
+ 499   6                      case 11:
+ 500   6                      {
+ 501   7                      while(1)
+ 502   7                      {
+ 503   8                char flag2=1,flag=1,mm,nn,sum,check,choice;
+ 504   8                check=0;
+ 505   8                sum=0;
+ 506   8                Ini_Lcd();  
+ 507   8                Disp(1,0,8,"看谱弹曲");
+ 508   8                Disp(2,0,8,"1:红河谷");
+ 509   8                Disp(3,0,10,"2:千与千寻");
+ 510   8                      Disp(4,0,8,"15：退出");
+ 511   8                key=00;
+ 512   8                  KeyIO=0xf0;
+ 513   8                      while (1)
+ 514   8                {
+ 515   9                  if ((KeyIO&0xf0)!=0xf0)
+ 516   9                    {
+ 517  10                    Delay_xMs(100);
+ 518  10                    if ((KeyIO&0xf0)!=0xf0)
+ 519  10                    {
+ 520  11                      key=scankey();  
+ 521  11                      if (key==43||key==11||key==12)
+ 522  11                      break;
+ 523  11                      }
+ 524  10                    }
+ 525   9                }
+ 526   8                      if (key==43)
+ 527   8                      {
+ 528   9                      TR0=0;
+ 529   9                      break;
+ 530   9                      }
+ 531   8                  switch(key){
+ 532   9                    case 11:
+ 533   9                      flag2=0;
+ 534   9                      choice=1;
+ 535   9                      break;  
+ 536   9                    case 12:
+ 537   9                      flag2=0;
+ 538   9                      choice=2;
+ 539   9                      break;
+ 540   9                    default: break;
+ 541   9                  }
+ 542   8                //sum=0;
+ 543   8                if(flag2==0){
+ 544   9                  Ini_Lcd();
+ 545   9                for(i=1;;i++)                                                                                      
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 10  
+
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                 {
+ 546  10                  char tune=0;
+ 547  10                  sum++;
+ 548  10                  flag=1;
+ 549  10                  if(choice==1)
+ 550  10                    mm=music2[i][0];
+ 551  10                  else if(choice==2)
+ 552  10                    mm=music1[i][0];
+ 553  10                  if(mm==13) Disp(2,0,14,"原谱：do  中音");
+ 554  10                  else if(mm==15) Disp(2,0,14,"原谱：re  中音");
+ 555  10                  else if(mm==17) Disp(2,0,14,"原谱：mi  中音");
+ 556  10                  else if(mm==18) Disp(2,0,14,"原谱：fa  中音");
+ 557  10                  else if(mm==20) Disp(2,0,14,"原谱：so  中音");
+ 558  10                  else if(mm==22) Disp(2,0,14,"原谱：la  中音");
+ 559  10                  else if(mm==24) Disp(2,0,14,"原谱：si  中音");
+ 560  10                  
+ 561  10                  else if(mm==1) Disp(2,0,14,"原谱：do  低音");
+ 562  10                  else if(mm==3) Disp(2,0,14,"原谱：re  低音");
+ 563  10                  else if(mm==5) Disp(2,0,14,"原谱：mi  低音");
+ 564  10                  else if(mm==6) Disp(2,0,14,"原谱：fa  低音");
+ 565  10                  else if(mm==8) Disp(2,0,14,"原谱：so  低音");
+ 566  10                  else if(mm==10) Disp(2,0,14,"原谱：la  低音");
+ 567  10                  else if(mm==12) Disp(2,0,14,"原谱：si  低音");
+ 568  10                  
+ 569  10                  else if(mm==25) Disp(2,0,14,"原谱：do  高音");
+ 570  10                  else if(mm==27) Disp(2,0,14,"原谱：re  高音");
+ 571  10                  else if(mm==29) Disp(2,0,14,"原谱：mi  高音");
+ 572  10                  else if(mm==30) Disp(2,0,14,"原谱：fa  高音");
+ 573  10                  else if(mm==32) Disp(2,0,14,"原谱：so  高音");
+ 574  10                  else if(mm==34) Disp(2,0,14,"原谱：la  高音");
+ 575  10                  else if(mm==36) Disp(2,0,14,"原谱：si  高音");
+ 576  10                  
+ 577  10                  else if(mm==0) {
+ 578  11                              TR0=0;
+ 579  11                    flag2=1;break;
+ 580  11                  }
+ 581  10                  //++++++++++++++++++++++++++++++++++++++++++++++++
+ 582  10                    while(flag==1){
+ 583  11                      key_tune=00;
+ 584  11                    KeyIO=0xf0;
+ 585  11                    if ((P1&0xf0)!=0xf0)
+ 586  11                    {
+ 587  12                      Delay_xMs(50);
+ 588  12                      if ((P1&0xf0)!=0xf0)
+ 589  12                      key_tune=scankey();
+ 590  12                    }
+ 591  11                    if (OPT_CHECK!=0x00)
+ 592  11                      {
+ 593  12                        switch(key_tune)
+ 594  12                        {
+ 595  13                        case 41:
+ 596  13                        Disp(3,5,4,"高音");
+ 597  13                        tune=1;
+ 598  13                        break;
+ 599  13                        case 42:
+ 600  13                        Disp(3,5,4,"低音");
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 11  
+
+ 601  13                        tune=-1;
+ 602  13                        break;
+ 603  13                                      default:
+ 604  13                                      Disp(3,5,4,"中音");
+ 605  13                        tune=0;
+ 606  13                        break;
+ 607  13                        } 
+ 608  12                       }
+ 609  11                              if (key_tune==44)
+ 610  11                              {
+ 611  12                              TR0=0;
+ 612  12                              break;
+ 613  12                              }
+ 614  11                              
+ 615  11                  
+ 616  11                  //++++++++++++++++++++++++++++++++++++++++++++++++
+ 617  11                  
+ 618  11                       // while(flag==1){
+ 619  11                  if(OPT_CHECK&0x01)
+ 620  11                   {
+ 621  12                      Disp(3,0,8,"在弹：do");
+ 622  12                      nn=13+12*tune;flag=0;
+ 623  12                     m=13+12*tune,n=8;
+ 624  12                   }
+ 625  11                   else if(OPT_CHECK&0x02)
+ 626  11                   {
+ 627  12                     Disp(3,0,8,"在弹：re");
+ 628  12                     nn=15+12*tune;flag=0;
+ 629  12                     m=15+12*tune,n=8;
+ 630  12                   }
+ 631  11                   else if(OPT_CHECK&0x04)
+ 632  11                   {
+ 633  12                     Disp(3,0,8,"在弹：mi");
+ 634  12                     nn=17+12*tune;flag=0;
+ 635  12                     m=17+12*tune,n=8;
+ 636  12                   }
+ 637  11                   else if(OPT_CHECK&0x08)
+ 638  11                   {
+ 639  12                     Disp(3,0,8,"在弹：fa");
+ 640  12                     nn=18+12*tune;flag=0;
+ 641  12                     m=18+12*tune,n=8;
+ 642  12                   }
+ 643  11                   else if(OPT_CHECK&0x10)
+ 644  11                   {
+ 645  12                    Disp(3,0,8,"在弹：so");
+ 646  12                     nn=20+12*tune;flag=0;
+ 647  12                     m=20+12*tune,n=8;
+ 648  12                   }
+ 649  11                   else if(OPT_CHECK&0x20)
+ 650  11                   {
+ 651  12                     Disp(3,0,8,"在弹：la");
+ 652  12                     nn=22+12*tune;flag=0;
+ 653  12                     m=22+12*tune,n=8;
+ 654  12                   }
+ 655  11                   else if(OPT_CHECK&0x40)
+ 656  11                   {
+ 657  12                     Disp(3,0,8,"在弹：si");
+ 658  12                     nn=24+12*tune;flag=0;
+ 659  12                     m=24+12*tune,n=8;
+ 660  12                   }
+ 661  11                   else{
+ 662  12                     nn=0;m=0,n=2;
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 12  
+
+ 663  12                     Disp(3,0,8,"在弹：0");
+ 664  12                   }
+ 665  11                   if(m==0x00)
+ 666  11                         {TR0=0;delay(n);} 
+ 667  11                         else
+ 668  11                         {TR0=1;delay(n);}
+ 669  11                 }
+ 670  10                       if (key_tune==44)
+ 671  10                       {
+ 672  11                       TR0=0;
+ 673  11                       break;
+ 674  11                       }
+ 675  10                 Delay_xMs(2000);
+ 676  10                 if(mm==nn) check++;
+ 677  10                 //if(i==42) flag2=1;
+ 678  10                }
+ 679   9                }
+ 680   8                if(check==1) Disp(4,0,8,"得分:1分");
+ 681   8                else if(check==2) Disp(4,0,8,"得分:2分");
+ 682   8                else if(check==3) Disp(4,0,8,"得分:3分");
+ 683   8                else if(check==4) Disp(4,0,8,"得分:4分");
+ 684   8                else if(check==5) Disp(4,0,8,"得分:5分");
+ 685   8                else if(check==6) Disp(4,0,8,"得分:6分");
+ 686   8                else if(check==7) Disp(4,0,8,"得分:7分");
+ 687   8                else if(check==8) Disp(4,0,8,"得分:8分");
+ 688   8                else if(check==9) Disp(4,0,8,"得分:9分");
+ 689   8                else if(check>=10) Disp(4,0,10,"得分：10分");
+ 690   8                else Disp(4,0,8,"得分:0分");
+ 691   8                check=0;
+ 692   8                sum=0;
+ 693   8                      //Disp(1,0,6,"1.返回");
+ 694   8                      delay(50);
+ 695   8                      KeyIO=0xf0;
+ 696   8                      while (1)
+ 697   8                {
+ 698   9                  if ((KeyIO&0xf0)!=0xf0)
+ 699   9                          {
+ 700  10                  Delay_xMs(100);
+ 701  10                  if((KeyIO&0xf0)!=0xf0)
+ 702  10                  break; 
+ 703  10                          }
+ 704   9                } 
+ 705   8                
+ 706   8              }
+ 707   7                  break;
+ 708   7                  }
+ 709   6          case 12:
+ 710   6          {
+ 711   7            while(1)
+ 712   7            {
+ 713   8              Ini_Lcd();
+ 714   8              i_cide=0;
+ 715   8              Disp(1,0,8,"记忆大师");
+ 716   8              Disp(2,0,8,"难度1-10");
+ 717   8              Disp(3,0,16,"难度高速度快分高");
+ 718   8              Disp(4,0,8,"15：退出");
+ 719   8              for(i=0;i<5;i++)
+ 720   8              {
+ 721   9                cide[i]=0+0x30;
+ 722   9              }
+ 723   8              key = 00;
+ 724   8              KeyIO = 0xf0;
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 13  
+
+ 725   8              while(1)
+ 726   8              {
+ 727   9                if ((KeyIO&0xf0)!=0xf0)
+ 728   9                {
+ 729  10                    Delay_xMs(100);
+ 730  10                    if ((KeyIO&0xf0)!=0xf0)
+ 731  10                    {
+ 732  11                      key=scankey();  
+ 733  11                      if (key==43||key>=11||key<=32)
+ 734  11                        break; //跳出键盘的循环
+ 735  11                    }
+ 736  10                }
+ 737   9              }//判断的循环
+ 738   8              
+ 739   8              if(key==43)
+ 740   8                break; //跳出case12的循环
+ 741   8              
+ 742   8              Ini_Lcd();
+ 743   8              game2_number = rand()%5;
+ 744   8              Disp(1,0,6,game2_num[game2_number]);
+ 745   8              switch(key){
+ 746   9                case 11:
+ 747   9                  delay(11);
+ 748   9                  grade=1;
+ 749   9                  break;
+ 750   9                case 12:
+ 751   9                  delay(10);
+ 752   9                  grade=2;
+ 753   9                  break;
+ 754   9                case 13:
+ 755   9                  delay(9);
+ 756   9                  grade=3;
+ 757   9                  break;
+ 758   9                case 14:
+ 759   9                  delay(8);
+ 760   9                  grade=4;
+ 761   9                  break;
+ 762   9                case 21:
+ 763   9                  delay(7);
+ 764   9                  grade=5;
+ 765   9                  break;
+ 766   9                case 22:
+ 767   9                  delay(6);
+ 768   9                  grade=6;
+ 769   9                  break;
+ 770   9                case 23:
+ 771   9                  delay(5);
+ 772   9                  grade=7;
+ 773   9                  break;
+ 774   9                case 24:
+ 775   9                  delay(4);
+ 776   9                  grade=8;
+ 777   9                  break;
+ 778   9                case 31:
+ 779   9                  delay(3);
+ 780   9                  grade=9;
+ 781   9                  break;
+ 782   9                case 32:
+ 783   9                  delay(2);
+ 784   9                  grade=10;
+ 785   9                  break;
+ 786   9              }
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 14  
+
+ 787   8              Ini_Lcd(); //刷新
+ 788   8              TMOD = 0x10;
+ 789   8              TH1 = 0x3c;
+ 790   8              TL1 = 0xb0;
+ 791   8              EA = 1;
+ 792   8              ET1 = 1;
+ 793   8              TR1 = 1;
+ 794   8              for (i=0;i<5;i++)
+ 795   8              {
+ 796   9                Write_Cmd(0x88+i);
+ 797   9                Write_Data(0x00);
+ 798   9                Write_Data(0x00);
+ 799   9              }
+ 800   8              
+ 801   8              Write_Cmd(0x88+i_cide);
+ 802   8              Write_Data(0x00);
+ 803   8              Write_Data(0x02);
+ 804   8              
+ 805   8              while(1)
+ 806   8              {
+ 807   9                bit flag_cide;
+ 808   9                flag_cide=0;
+ 809   9                key_cide=00;
+ 810   9                while (1)
+ 811   9                {
+ 812  10                  KeyIO=0xf0;
+ 813  10                  if((KeyIO&0xf0)!=0xf0)
+ 814  10                  {
+ 815  11                    Delay_xMs(100);
+ 816  11                    if ((KeyIO&0xf0)!=0xf0)
+ 817  11                    {
+ 818  12                      key_cide=scankey();
+ 819  12                      KeyIO=0xf0;
+ 820  12                      while (KeyIO!=0xf0);
+ 821  12                        break;
+ 822  12                    }
+ 823  11                  }
+ 824  10                }//选择键盘的循环
+ 825   9                
+ 826   9                switch (key_cide)
+ 827   9                {
+ 828  10                  case 11:
+ 829  10                  cide[i_cide]=1+0x30;
+ 830  10                  break;
+ 831  10                  case 12:
+ 832  10                  cide[i_cide]=2+0x30;
+ 833  10                  break;
+ 834  10                  case 13:
+ 835  10                  cide[i_cide]=3+0x30;
+ 836  10                  break;
+ 837  10                  case 14:
+ 838  10                  cide[i_cide]=4+0x30;
+ 839  10                  break;
+ 840  10                  case 21:
+ 841  10                  cide[i_cide]=5+0x30;
+ 842  10                  break;
+ 843  10                  case 22:
+ 844  10                  cide[i_cide]=6+0x30;
+ 845  10                  break;
+ 846  10                  case 23:
+ 847  10                  cide[i_cide]=7+0x30;
+ 848  10                  break;
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 15  
+
+ 849  10                  case 24:
+ 850  10                  cide[i_cide]=8+0x30;
+ 851  10                  break;
+ 852  10                  case 31:
+ 853  10                  cide[i_cide]=9+0x30;
+ 854  10                  break;
+ 855  10                  default:
+ 856  10                  if (i_cide)
+ 857  10                  {
+ 858  11                  if (i_cide<4||cide[4]==0x30)
+ 859  11                  {
+ 860  12                    i_cide--;
+ 861  12                    cide[i_cide]=0+0x30;
+ 862  12                  }
+ 863  11                  else
+ 864  11                    cide[i_cide]=0+0x30;
+ 865  11                  }
+ 866  10                  break;
+ 867  10                }//switch的循环
+ 868   9                if (i_cide<4&&key_cide<32)
+ 869   9                  i_cide++;
+ 870   9                for (i=0;i<5;i++)
+ 871   9                {
+ 872  10                  if (cide[i]-0x30)
+ 873  10                  Disp(2,i,1,cide+i);
+ 874  10                  else
+ 875  10                  Disp(2,i,2," ");
+ 876  10                }//for循环
+ 877   9                for (i=0;i<5;i++)
+ 878   9                {
+ 879  10                  Write_Cmd(0x88+i);
+ 880  10                  Write_Data(0x00);
+ 881  10                  Write_Data(0x00);
+ 882  10                }//for循环
+ 883   9                
+ 884   9                Write_Cmd(0x88+i_cide);
+ 885   9                Write_Data(0x00);
+ 886   9                Write_Data(0x02);
+ 887   9                
+ 888   9                if(cide[4]!=0x30)
+ 889   9                {
+ 890  10                  flag_cide=1;
+ 891  10                  for (i=0;i<5;i++)
+ 892  10                  {
+ 893  11                    if ((cide[i]-0x30)!=game2_check[game2_number][i])
+ 894  11                    {
+ 895  12                      flag_cide=0;
+ 896  12                      
+ 897  12                  Disp(1,0,12,"很可惜失败了");
+ 898  12                  Disp(4,0,8,"15：退出");
+ 899  12                  while(1)
+ 900  12                  {
+ 901  13                    if ((KeyIO&0xf0)!=0xf0)
+ 902  13                    {
+ 903  14                      Delay_xMs(100);
+ 904  14                      if ((KeyIO&0xf0)!=0xf0)
+ 905  14                      {
+ 906  15                        key=scankey();  
+ 907  15                        if (key==43)
+ 908  15                          break; //跳出键盘的循环
+ 909  15                      }
+ 910  14                    } 
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 16  
+
+ 911  13                  }//判断的循环
+ 912  12                  if(key==43)
+ 913  12                    break;
+ 914  12                    }
+ 915  11                  }
+ 916  10                  if(key==43)
+ 917  10                    break;
+ 918  10                }
+ 919   9                if (flag_cide)
+ 920   9                {
+ 921  10                  TR1 = 0;
+ 922  10                  Ini_Lcd();
+ 923  10                  Disp(1,0,12,"恭喜你成功了");
+ 924  10                  if(time<=100)
+ 925  10                    grade+=30;
+ 926  10                  else if(time<=200)
+ 927  10                    grade+=25;
+ 928  10                  else
+ 929  10                    grade+=20;
+ 930  10                  temp[0] = grade/10+0x30;
+ 931  10                  temp[1] = grade%10+0x30;
+ 932  10                  temp[2] = '\0';
+ 933  10                  Disp(2,0,6,"得分：");
+ 934  10                  Disp(2,4,2,temp);
+ 935  10                  Disp(4,0,8,"15：退出");
+ 936  10                  while(1)
+ 937  10                  {
+ 938  11                    if ((KeyIO&0xf0)!=0xf0)
+ 939  11                    {
+ 940  12                      Delay_xMs(100);
+ 941  12                      if ((KeyIO&0xf0)!=0xf0)
+ 942  12                      {
+ 943  13                        key=scankey();  
+ 944  13                        if (key==43)
+ 945  13                          break; //跳出键盘的循环
+ 946  13                      }
+ 947  12                    } 
+ 948  11                  }//判断的循环
+ 949  10                  if(key==43)
+ 950  10                    break;
+ 951  10                }
+ 952   9                
+ 953   9              }//小循环
+ 954   8            }//case12的循环
+ 955   7            break;
+ 956   7          }//case12的大循环
+ 957   6                  default: break;
+ 958   6                  }   
+ 959   5              }   
+ 960   4              break;   
+ 961   4          default: break;
+ 962   4          }
+ 963   3        }   //switch(key_1)
+ 964   2          }   //while(1)
+ 965   1      }   //void main
+ 966          
+ 967          /*****************检测控制端口的状态*****************/
+ 968          uchar ctrl_port_check(void)
+ 969          {
+ 970   1          SW_CTRL = 0xFF;
+ 971   1          return  SW_CTRL&0xF0;
+ 972   1      }
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 17  
+
+ 973          
+ 974          
+ 975             
+ 976          /****************延迟毫秒数************************/
+ 977          void Delay_xMs(unsigned int x)
+ 978          {
+ 979   1          unsigned int i,j;
+ 980   1          for( i =0;i < x;i++ )
+ 981   1          {
+ 982   2              for( j =0;j<2;j++ );
+ 983   2          }
+ 984   1      }
+ 985          
+ 986          
+ 987          void delay(uchar p)
+ 988          {
+ 989   1        uchar i,j; 
+ 990   1        p = p*10;
+ 991   1        for(;p>0;p--)
+ 992   1        for(i=181;i>0;i--)
+ 993   1        for(j=181;j>0;j--);
+ 994   1      }
+ 995          void pause()
+ 996          {
+ 997   1        uchar i,j;
+ 998   1        for(i=150;i>0;i--)
+ 999   1        for(j=150;j>0;j--);
+1000   1      }
+1001          void T0_int() interrupt 1
+1002          {
+1003   1        bee_Speak=!bee_Speak;
+1004   1        TH0=T[m][0]; 
+1005   1        TL0=T[m][1];
+1006   1      }
+1007          void T1_int() interrupt 3
+1008          {
+1009   1        TH1 = 0x3c;
+1010   1        TL0 = 0xb0;
+1011   1        time++;
+1012   1      }
+1013          
+1014          void play_start(uchar (*music)[2])
+1015          {
+1016   1          uchar i=0,ii=0; 
+1017   1          uchar j,p=2;
+1018   1          char xdata score[70][4]={0}; //score的第一个维度是tune，第二个维度是num，第三个维度是n，第四个维度是m
+1019   1          char tune,num;
+1020   1          TMOD=0x01; EA=1; ET0=1; 
+1021   1          if (start==1)
+1022   1          {
+1023   2          while (1)
+1024   2          {
+1025   3          m=music[i][0];
+1026   3          n=music[i][1];
+1027   3          if(m==0x00)
+1028   3        {
+1029   4          TR0=0;delay(n);i++;
+1030   4        } 
+1031   3        else if(m==0xFF)
+1032   3        {
+1033   4          TR0=0;
+1034   4          return;
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 18  
+
+1035   4        } 
+1036   3        else
+1037   3        {
+1038   4          TR0=1;
+1039   4          delay(n);
+1040   4          i++;
+1041   4        }
+1042   3          }
+1043   2          }
+1044   1          //get score information
+1045   1                  while(1)
+1046   1                  {
+1047   2                    m=music[i][0];
+1048   2                    n=music[i][1];
+1049   2                    score[ii][3]=m;
+1050   2                  if (m==0||(m>=13&&m<=24))
+1051   2                    tune=0;
+1052   2                  else if (m>0&&m<13)
+1053   2                    tune=-1;
+1054   2                  else if (m>24&&m<=36)
+1055   2                    tune=1;
+1056   2                  else
+1057   2                    tune=2;
+1058   2                    score[ii][0]=tune;
+1059   2                  if (tune==2)
+1060   2                    break;
+1061   2                    num=m-12*tune;
+1062   2                  switch (num)
+1063   2                  {
+1064   3                      case 13:
+1065   3                      case 14:
+1066   3                      score[ii][1]=1; break;
+1067   3                      case 15:
+1068   3                      case 16:
+1069   3                      score[ii][1]=2; break;
+1070   3                      case 17:score[ii][1]=3; break;
+1071   3                      case 18:
+1072   3                      case 19:
+1073   3                      score[ii][1]=4; break;
+1074   3                      case 20:
+1075   3                      case 21:
+1076   3                      score[ii][1]=5; break;
+1077   3                      case 22:
+1078   3                      case 23:
+1079   3                      score[ii][1]=6; break;
+1080   3                      case 24:score[ii][1]=7; break;
+1081   3                      case 0:score[ii][1]=0;  break;
+1082   3                  }
+1083   2                  score[ii][2]=n;
+1084   2                  ii++;
+1085   2                  i++;
+1086   2                  }
+1087   1              i=0;
+1088   1        while(1) 
+1089   1        {
+1090   2          if((P1&0xf0)!=0xf0) //如果有键按下
+1091   2            {
+1092   3            Delay_xMs(100);   //延时去抖动
+1093   3            if((KeyIO&0xf0)!=0xf0)   //再判断
+1094   3            {
+1095   4              key=scankey();
+1096   4                if(key==44){
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 19  
+
+1097   5                TR0=0;
+1098   5                      return;
+1099   5                }
+1100   4            }
+1101   3          }   
+1102   2              
+1103   2          num=score[i][1];
+1104   2              tune=score[i][0];
+1105   2              n=score[i][2];
+1106   2          //显示乐谱
+1107   2          
+1108   2                  if (tune==2)
+1109   2                  {
+1110   3                  TR0=0;
+1111   3                  break;
+1112   3                  }
+1113   2            j=i%8;
+1114   2          if(play_judge)
+1115   2          {
+1116   3            switch (tune)
+1117   3                  {
+1118   4                      case -1:
+1119   4                      {
+1120   5                          switch (num)
+1121   5                          {
+1122   6                              case 1: Disp(p+2,j,2,"1"); break;
+1123   6                              case 2: Disp(p+2,j,2,"2"); break;
+1124   6                              case 3: Disp(p+2,j,2,"3"); break;
+1125   6                              case 4: Disp(p+2,j,2,"4"); break;
+1126   6                              case 5: Disp(p+2,j,2,"5"); break;
+1127   6                              case 6: Disp(p+2,j,2,"6"); break;
+1128   6                              case 7: Disp(p+2,j,2,"7"); break;
+1129   6                              
+1130   6                          }
+1131   5                          switch (n)
+1132   5                          {
+1133   6                              case 2: 
+1134   6                              Write_Cmd(0x88+j);
+1135   6                              Write_Data(0x00);
+1136   6                              Write_Data(0x06);
+1137   6                              break;
+1138   6                              case 4:
+1139   6                              Write_Cmd(0x88+j);
+1140   6                              Write_Data(0x00);
+1141   6                              Write_Data(0x04);
+1142   6                              break;
+1143   6                              case 8:
+1144   6                              Disp(p+1,j,1,&dot_l);
+1145   6                              break;
+1146   6                          }
+1147   5                          break;
+1148   5                      }
+1149   4                      case 0:
+1150   4                      {
+1151   5                          switch (num)
+1152   5                          {
+1153   6                              case 0: Disp(p+2,j,2,"0"); break;
+1154   6                              case 1: Disp(p+2,j,2,"1"); break;
+1155   6                              case 2: Disp(p+2,j,2,"2"); break;
+1156   6                              case 3: Disp(p+2,j,2,"3"); break;
+1157   6                              case 4: Disp(p+2,j,2,"4"); break;
+1158   6                              case 5: Disp(p+2,j,2,"5"); break;
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 20  
+
+1159   6                              case 6: Disp(p+2,j,2,"6"); break;
+1160   6                              case 7: Disp(p+2,j,2,"7"); break;
+1161   6                          }
+1162   5                          switch (n)
+1163   5                          {
+1164   6                              case 2: 
+1165   6                              Write_Cmd(0x88+j);
+1166   6                              Write_Data(0x00);
+1167   6                              Write_Data(0x02);
+1168   6                              break;
+1169   6                              case 4:
+1170   6                              Write_Cmd(0x88+j);
+1171   6                              Write_Data(0x00);
+1172   6                              Write_Data(0x00);
+1173   6                              break;
+1174   6                              case 8:
+1175   6                              break;
+1176   6                          }
+1177   5                          break;
+1178   5                      }
+1179   4                      case 1:
+1180   4                      {
+1181   5                          switch (num)
+1182   5                          {
+1183   6                              case 1: Disp(p+2,j,2,"1"); break;
+1184   6                              case 2: Disp(p+2,j,2,"2"); break;
+1185   6                              case 3: Disp(p+2,j,2,"3"); break;
+1186   6                              case 4: Disp(p+2,j,2,"4"); break;
+1187   6                              case 5: Disp(p+2,j,2,"5"); break;
+1188   6                              case 6: Disp(p+2,j,2,"6"); break;
+1189   6                              case 7: Disp(p+2,j,2,"7"); break;
+1190   6                          }
+1191   5                          switch (n)
+1192   5                          {
+1193   6                              case 2: 
+1194   6                              Write_Cmd(0x88+j);
+1195   6                              Write_Data(0x00);
+1196   6                              Write_Data(0x02);
+1197   6                              Disp(p-1,j,1,&dot_h);
+1198   6                              break;
+1199   6                              case 4:
+1200   6                              Write_Cmd(0x88+j);
+1201   6                              Write_Data(0x00);
+1202   6                              Write_Data(0x00);
+1203   6                              Disp(p-1,j,1,&dot_h);
+1204   6                              break;
+1205   6                              case 8:
+1206   6                              Disp(p-1,j,1,&dot_h);
+1207   6                              break;
+1208   6                          }
+1209   5                          Disp(p-1,j,1,&dot_h);
+1210   5                          break;
+1211   5                      }
+1212   4                  }
+1213   3          }
+1214   2      
+1215   2                  switch (tune)
+1216   2                  {
+1217   3                      case -1:
+1218   3                      {
+1219   4                          switch (num)
+1220   4                          {
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 21  
+
+1221   5                              case 1: Disp(p,j,2,"1"); break;
+1222   5                              case 2: Disp(p,j,2,"2"); break;
+1223   5                              case 3: Disp(p,j,2,"3"); break;
+1224   5                              case 4: Disp(p,j,2,"4"); break;
+1225   5                              case 5: Disp(p,j,2,"5"); break;
+1226   5                              case 6: Disp(p,j,2,"6"); break;
+1227   5                              case 7: Disp(p,j,2,"7"); break;
+1228   5                              
+1229   5                          }
+1230   4                          switch (n)
+1231   4                          {
+1232   5                              case 2: 
+1233   5                              Write_Cmd(0x88+j);
+1234   5                              Write_Data(0x00);
+1235   5                              Write_Data(0x06);
+1236   5                              break;
+1237   5                              case 4:
+1238   5                              Write_Cmd(0x88+j);
+1239   5                              Write_Data(0x00);
+1240   5                              Write_Data(0x04);
+1241   5                              break;
+1242   5                              case 8:
+1243   5                              Disp(p+1,j,1,&dot_l);
+1244   5                              break;
+1245   5                          }
+1246   4                          break;
+1247   4                      }
+1248   3                      case 0:
+1249   3                      {
+1250   4                          switch (num)
+1251   4                          {
+1252   5                              case 0: Disp(p,j,2,"0"); break;
+1253   5                              case 1: Disp(p,j,2,"1"); break;
+1254   5                              case 2: Disp(p,j,2,"2"); break;
+1255   5                              case 3: Disp(p,j,2,"3"); break;
+1256   5                              case 4: Disp(p,j,2,"4"); break;
+1257   5                              case 5: Disp(p,j,2,"5"); break;
+1258   5                              case 6: Disp(p,j,2,"6"); break;
+1259   5                              case 7: Disp(p,j,2,"7"); break;
+1260   5                          }
+1261   4                          switch (n)
+1262   4                          {
+1263   5                              case 2: 
+1264   5                              Write_Cmd(0x88+j);
+1265   5                              Write_Data(0x00);
+1266   5                              Write_Data(0x02);
+1267   5                              break;
+1268   5                              case 4:
+1269   5                              Write_Cmd(0x88+j);
+1270   5                              Write_Data(0x00);
+1271   5                              Write_Data(0x00);
+1272   5                              break;
+1273   5                              case 8:
+1274   5                              break;
+1275   5                          }
+1276   4                          break;
+1277   4                      }
+1278   3                      case 1:
+1279   3                      {
+1280   4                          switch (num)
+1281   4                          {
+1282   5                              case 1: Disp(p,j,2,"1"); break;
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 22  
+
+1283   5                              case 2: Disp(p,j,2,"2"); break;
+1284   5                              case 3: Disp(p,j,2,"3"); break;
+1285   5                              case 4: Disp(p,j,2,"4"); break;
+1286   5                              case 5: Disp(p,j,2,"5"); break;
+1287   5                              case 6: Disp(p,j,2,"6"); break;
+1288   5                              case 7: Disp(p,j,2,"7"); break;
+1289   5                          }
+1290   4                          switch (n)
+1291   4                          {
+1292   5                              case 2: 
+1293   5                              Write_Cmd(0x88+j);
+1294   5                              Write_Data(0x00);
+1295   5                              Write_Data(0x02);
+1296   5                              Disp(p-1,j,1,&dot_h);
+1297   5                              break;
+1298   5                              case 4:
+1299   5                              Write_Cmd(0x88+j);
+1300   5                              Write_Data(0x00);
+1301   5                              Write_Data(0x00);
+1302   5                              Disp(p-1,j,1,&dot_h);
+1303   5                              break;
+1304   5                              case 8:
+1305   5                              Disp(p-1,j,1,&dot_h);
+1306   5                              break;
+1307   5                          }
+1308   4                          Disp(p-1,j,1,&dot_h);
+1309   4                          break;
+1310   4                      }
+1311   3                  }
+1312   2      
+1313   2            if(j==7){
+1314   3              p++;
+1315   3              //if(p==4) {
+1316   3                      if (p==3)  {
+1317   4                //p=1;
+1318   4                          p=2;
+1319   4                Ini_Lcd();
+1320   4                Disp(4,0,8,"16：退出");
+1321   4              }
+1322   3            } 
+1323   2              //排除开机显示乐谱
+1324   2              if (num==0)
+1325   2              {
+1326   3                    TR0=0;
+1327   3                    delay(score[i][2]);
+1328   3              } 
+1329   2              else 
+1330   2              {
+1331   3                  TR0=1;
+1332   3                  m=score[i][3];
+1333   3                  delay(score[i][2]);
+1334   3              }
+1335   2              i++;
+1336   2        }
+1337   1          TR0=0;
+1338   1      }
+1339          
+1340          uchar scankey(void)//矩阵键盘翻转扫描
+1341          {
+1342   1        uint keyvalue=0;
+1343   1        uchar temp1,temp2,keycode;
+1344   1      
+C51 COMPILER V9.57.0.0   MAIN                                                              08/22/2020 13:59:43 PAGE 23  
+
+1345   1        KeyIO=0xf0;   //行置0列置1
+1346   1        temp1=KeyIO&0xf0;
+1347   1        if((temp1&0xf0)==0xf0) return(0);  //若无键按下返回0
+1348   1        KeyIO=0x0f;
+1349   1        temp2=KeyIO&0x0f;            //若有键按下，行置1列置0
+1350   1        keycode=~(temp1|temp2);        //获得键盘码
+1351   1        switch(keycode)            //根据键盘码返回键值
+1352   1        {
+1353   2          case 0x11:return(11);break;
+1354   2          case 0x21:return(12);break;
+1355   2          case 0x41:return(13);break;
+1356   2          case 0x81:return(14);break;
+1357   2          case 0x12:return(21);break;
+1358   2          case 0x22:return(22);break;
+1359   2          case 0x42:return(23);break;
+1360   2          case 0x82:return(24);break;
+1361   2          case 0x14:return(31);break;
+1362   2          case 0x24:return(32);break;
+1363   2          case 0x44:return(33);break;
+1364   2          case 0x84:return(34);break;
+1365   2          case 0x18:return(41);break;
+1366   2          case 0x28:return(42);break;
+1367   2          case 0x48:return(43);break;
+1368   2          case 0x88:return(44);break;
+1369   2          default:  return(0);break;
+1370   2        }
+1371   1        return(0);
+1372   1      }
+*** WARNING C294 IN LINE 1371 OF ..\源文件\main.c: unreachable code
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   6947    ----
+   CONSTANT SIZE    =   2841    ----
+   XDATA SIZE       =   ----     280
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     37      26
+   IDATA SIZE       =    122    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
